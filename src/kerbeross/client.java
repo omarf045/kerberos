@@ -80,9 +80,8 @@ public class client {
 
             Kctgs = message_2_Array[0];
 
-            //byte[] KCTGSBytes = Kctgs.getBytes();
             byte[] KCTGSBytes = hexToBytes(Kctgs);
-            //System.out.println("KCTGSBytes.length: " + KCTGSBytes.length);
+
 
             SecretKey secretKCTGS = new SecretKeySpec(KCTGSBytes, 0, KCTGSBytes.length, "AES");
             IDtgs = message_2_Array[1];
@@ -108,13 +107,12 @@ public class client {
             String auth_C1 = Arrays.toString(auth_C1_Array);
 
             byte[] E_K_CTGS_auth_C1_Bytes = encryptor.AESEncryption(secretCTGS, auth_C1);
-            //String E_K_CTGS_auth_C1 = new String(E_K_CTGS_auth_C1_Bytes, StandardCharsets.UTF_8);
+
             String E_K_CTGS_auth_C1 = bytesToHex(E_K_CTGS_auth_C1_Bytes);
 
             //  Mensaje (3)            
             String[] message_3_Array = {Str_ipV, ticketTGS, E_K_CTGS_auth_C1};
             String message_3 = Arrays.toString(message_3_Array);
-            //System.out.println(message_3);
 
             byte[] message_3_Bytes = message_3.getBytes();
 
@@ -146,7 +144,6 @@ public class client {
 
             //System.out.println("TicketV: " + ticketV);
             byte[] E_K_V_Ticket_V_Bytes = hexToBytes(ticketV);
-            //System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(E_K_V_Ticket_V_Bytes));
 
             //  AuthC2V
             String ts5 = Instant.now().toString();
@@ -157,10 +154,6 @@ public class client {
             byte[] K_CV_Auth_C2V_Bytes = encryptor.AESEncryption(secretKCV, Auth_C2V);
             String K_CV_Auth_C2V = bytesToHex(K_CV_Auth_C2V_Bytes);
 
-            //System.out.println("K_CV_Auth_C2V: " + K_CV_Auth_C2V);
-            //System.out.println("K_CV_Auth_C2V_Bytes: " + Arrays.toString(K_CV_Auth_C2V_Bytes));
-            //System.out.println("K_CV_Auth_C2V_Bytes.length: " + K_CV_Auth_C2V_Bytes.length);
-            //String K_CV_Auth_C2V = new String(K_CV_Auth_C2V_Bytes, StandardCharsets.UTF_8);
             //  Mensaje (5)
             String[] message_5_Array = {ticketV, K_CV_Auth_C2V};
             String message_5 = Arrays.toString(message_5_Array);

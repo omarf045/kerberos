@@ -59,10 +59,9 @@ public class ServiceServer {
 
             ticket_V = message_5_array[0].replaceAll(" ", "");
 
-            //System.out.println("ticketv: " + ticket_V);
+
             byte[] ticket_V_Bytes = hexToBytes(ticket_V);
 
-            //System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(ticket_V_Bytes));
             byte[] decypher_ticket_V_Bytes = encryptor.AESDecryption(secretV, ticket_V_Bytes);
 
             Auth_C2V = message_5_array[1].replaceAll(" ", "");
