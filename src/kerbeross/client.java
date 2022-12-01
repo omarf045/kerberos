@@ -29,6 +29,8 @@ public class client {
         String Kctgs, IDtgs, TS2, lifetime2;
 
         try {
+
+            System.out.println("||  CLIENT  ||");
             //  Se conecta a la autoridad certificadora
             System.out.println(" ¬ Ingresa la IP de la autoridad certificadora: ");
             InetAddress ipAC = InetAddress.getByName(scanner.nextLine());
@@ -40,7 +42,6 @@ public class client {
 
             byte[] encodedSecretCTGS = comunicator.getBytes(16, ipAC, AUTH_PORT);
             SecretKey secretCTGS = new SecretKeySpec(encodedSecretCTGS, 0, encodedSecretCTGS.length, "AES");
-            System.out.println("Llave Secreta Client: " + secretC);
             System.out.println("Claves recibidas y codificadas");
 
             //Manda (1)
@@ -61,27 +62,27 @@ public class client {
             System.out.println("Esperando al AS...");
             comunicator.sendBytes(AS_PORT, message_1_Bytes);
 
-            System.out.println("Se envió correctamente el mensaje (1)");
+            System.out.println("Mensaje (1) enviado");
 
             //  Recibe (2)
             System.out.println(" ¬ Ingresa la IP del AS: ");
             InetAddress ipAS = InetAddress.getByName(scanner.nextLine());
 
             byte[] Emessage_2_Bytes = comunicator.getBytes(512, ipAS, AS_PORT);
-            System.out.println(Emessage_2_Bytes.length);
+            //System.out.println(Emessage_2_Bytes.length);
 
             byte[] trimmed = conv.trim(Emessage_2_Bytes);
-            System.out.println(trimmed.length);
+            //System.out.println(trimmed.length);
             byte[] decryptedMessage2 = encryptor.AESDecryption(secretC, trimmed);
             String message_2 = new String(decryptedMessage2, StandardCharsets.UTF_8).replaceAll("[\\[\\]]", "");
-            System.out.println(message_2);
+            //System.out.println(message_2);
             String[] message_2_Array = message_2.split(",");
 
             Kctgs = message_2_Array[0];
 
             //byte[] KCTGSBytes = Kctgs.getBytes();
             byte[] KCTGSBytes = hexToBytes(Kctgs);
-            System.out.println("KCTGSBytes.length: " + KCTGSBytes.length);
+            //System.out.println("KCTGSBytes.length: " + KCTGSBytes.length);
 
             SecretKey secretKCTGS = new SecretKeySpec(KCTGSBytes, 0, KCTGSBytes.length, "AES");
             IDtgs = message_2_Array[1];
@@ -89,8 +90,7 @@ public class client {
             lifetime2 = message_2_Array[3];
             String ticketTGS = message_2_Array[4];
 
-            System.out.println("ticketTGS: " + ticketTGS);
-
+            //System.out.println("ticketTGS: " + ticketTGS);
             System.out.println("Mensaje (2) Recibido");
 
             //  Manda (3)
@@ -114,15 +114,16 @@ public class client {
             //  Mensaje (3)            
             String[] message_3_Array = {Str_ipV, ticketTGS, E_K_CTGS_auth_C1};
             String message_3 = Arrays.toString(message_3_Array);
-            System.out.println(message_3);
+            //System.out.println(message_3);
 
             byte[] message_3_Bytes = message_3.getBytes();
 
             System.out.println("Esperando al TGS...");
             comunicator.sendBytes(TGS_PORT, message_3_Bytes);
+            System.out.println("Mensaje (3) enviado");
 
             //  Recibe (4)
-            System.out.println("Se recibio el mensaje (4)");
+            System.out.println("Mensaje (4) recibido");
             byte[] encryptedMessage4 = comunicator.getBytes(512, ipTGS, TGS_PORT);
             encryptedMessage4 = conv.trim(encryptedMessage4);
 
@@ -132,21 +133,20 @@ public class client {
 
             decipheredArray4 = decipheredArray4.replace("[", "").replace("]", "");
 
-            System.out.println(decipheredArray4);
-
+            //(decipheredArray4);
             String[] decipheredData4 = decipheredArray4.split(",");
 
-            String KCV = decipheredData4[0];
+            String KCV = decipheredData4[0].replaceAll(" ", "");
             byte[] KCVBytes = hexToBytes(KCV);
             SecretKey secretKCV = new SecretKeySpec(KCVBytes, 0, KCVBytes.length, "AES");
 
-            String idV = decipheredData4[1].replaceAll(" ","");
-            String ts4 = decipheredData4[2].replaceAll(" ","");
-            String ticketV = decipheredData4[3].replaceAll(" ","");
+            String idV = decipheredData4[1].replaceAll(" ", "");
+            String ts4 = decipheredData4[2].replaceAll(" ", "");
+            String ticketV = decipheredData4[3].replaceAll(" ", "");
 
-            System.out.println("TicketV: " + ticketV);
+            //System.out.println("TicketV: " + ticketV);
             byte[] E_K_V_Ticket_V_Bytes = hexToBytes(ticketV);
-            System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(E_K_V_Ticket_V_Bytes));
+            //System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(E_K_V_Ticket_V_Bytes));
 
             //  AuthC2V
             String ts5 = Instant.now().toString();
@@ -156,13 +156,11 @@ public class client {
 
             byte[] K_CV_Auth_C2V_Bytes = encryptor.AESEncryption(secretKCV, Auth_C2V);
             String K_CV_Auth_C2V = bytesToHex(K_CV_Auth_C2V_Bytes);
-            
-            
-            System.out.println("K_CV_Auth_C2V: " + K_CV_Auth_C2V);
-            System.out.println("K_CV_Auth_C2V_Bytes: " + Arrays.toString(K_CV_Auth_C2V_Bytes));
-            System.out.println("K_CV_Auth_C2V_Bytes.length: " + K_CV_Auth_C2V_Bytes.length);
-            //String K_CV_Auth_C2V = new String(K_CV_Auth_C2V_Bytes, StandardCharsets.UTF_8);
 
+            //System.out.println("K_CV_Auth_C2V: " + K_CV_Auth_C2V);
+            //System.out.println("K_CV_Auth_C2V_Bytes: " + Arrays.toString(K_CV_Auth_C2V_Bytes));
+            //System.out.println("K_CV_Auth_C2V_Bytes.length: " + K_CV_Auth_C2V_Bytes.length);
+            //String K_CV_Auth_C2V = new String(K_CV_Auth_C2V_Bytes, StandardCharsets.UTF_8);
             //  Mensaje (5)
             String[] message_5_Array = {ticketV, K_CV_Auth_C2V};
             String message_5 = Arrays.toString(message_5_Array);
@@ -173,9 +171,17 @@ public class client {
 
             System.out.println("Mensaje (5) Enviado");
 
+            byte[] E_K_C_V_Message_6_Bytes = comunicator.getBytes(512, ipV, V_PORT);
+
+            byte[] E_K_C_V_Message_6_Bytes_trimmed = conv.trim(E_K_C_V_Message_6_Bytes);
+            byte[] message_6_Bytes = encryptor.AESDecryption(secretKCV, E_K_C_V_Message_6_Bytes_trimmed);
+            String message_6 = new String(message_6_Bytes, StandardCharsets.UTF_8);
+
+            System.out.println("Mensaje (6) recibido");
             //Recibe (6)
-            if (comunicator.getBytes(512, ipV, V_PORT) != null) {
+            if (!"".equals(message_6)) {
                 System.out.println("Servicio Concedido y Cliente autentificado!");
+
             } else {
                 System.out.println("Servicio Denegado. Cliente no Autentificado");
             }

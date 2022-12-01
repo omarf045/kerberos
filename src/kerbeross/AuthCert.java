@@ -26,40 +26,40 @@ public class AuthCert {
             ServerSocket ssCTGS_C = new ServerSocket(AUTH_PORT);
             kd.sendSecretKey(secretCTGS, ssCTGS_C);
             System.out.println("Clave enviada al Cliente");
-            
+
             //Clave del Client al AS
             ServerSocket ssC_AS = new ServerSocket(AUTH_PORT);
             System.out.println("Esperando al AS...");
             kd.sendSecretKey(secretC, ssC_AS);
-            
+
             //Clave del Client/TGS al AS
             ServerSocket ssCTGS_AS = new ServerSocket(AUTH_PORT);
-            kd.sendSecretKey(secretCTGS, ssCTGS_AS); 
-            System.out.println("Llave Secreta Client/TGS: "+secretCTGS);
-            
+            kd.sendSecretKey(secretCTGS, ssCTGS_AS);
+            System.out.println("Llave Secreta Client/TGS: " + secretCTGS);
+
             //Clave del TGS al AS
             ServerSocket ssTGS_AS = new ServerSocket(AUTH_PORT);
             kd.sendSecretKey(secretTGS, ssTGS_AS);
-            System.out.println("Clave enviada al AS");                      
+            System.out.println("Clave enviada al AS");
 
             //Clave del TGS al TGS
             ServerSocket ssTGS_TGS = new ServerSocket(AUTH_PORT);
             System.out.println("Esperando al TGS...");
             kd.sendSecretKey(secretTGS, ssTGS_TGS);
-            
+
             //Clave del Client/TGS al TGS
             ServerSocket ssCTGS_TGS = new ServerSocket(AUTH_PORT);
-            kd.sendSecretKey(secretCTGS, ssCTGS_TGS);   
-            
+            kd.sendSecretKey(secretCTGS, ssCTGS_TGS);
+
             //Clave del Servidor al TGS
             ServerSocket ssV_TGS = new ServerSocket(AUTH_PORT);
-            kd.sendSecretKey(secretV, ssV_TGS);     
-            
+            kd.sendSecretKey(secretV, ssV_TGS);
+
             //Clave del Client/Servidor al TGS
             ServerSocket ssCV_TGS = new ServerSocket(AUTH_PORT);
             kd.sendSecretKey(secretCV, ssCV_TGS);
-            System.out.println("Clave enviada al TGS");  
-            
+            System.out.println("Clave enviada al TGS");
+
             //Clave del Client/Servidor al V
             ServerSocket ssCV_V = new ServerSocket(AUTH_PORT);
             System.out.println("Esperando a V...");
@@ -68,12 +68,10 @@ public class AuthCert {
             //Clave del Servidor al V
             ServerSocket ssV_V = new ServerSocket(AUTH_PORT);
             kd.sendSecretKey(secretV, ssV_V);
-            System.out.println("Clave enviada al Servidor");       
-            
+            System.out.println("Clave enviada al Servidor");
 
-        } 
-        catch (IOException ex) {
-            System.out.println("IOException: "+ex);
+        } catch (IOException ex) {
+            System.out.println("IOException: " + ex);
         }
 
     }

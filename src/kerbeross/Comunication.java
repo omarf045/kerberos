@@ -12,7 +12,7 @@ public class Comunication {
             //  Abre un serverSocket, un dataSocket y envia los datos
             ServerSocket socket = new ServerSocket(port);
             Socket dataSocket = socket.accept();
-            System.out.println("Conexion establecida MF"); 
+            //System.out.println("Conexion establecida MF"); 
             dataSocket.getOutputStream().write(message);
             dataSocket.getOutputStream().flush();
             dataSocket.close();
