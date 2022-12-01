@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -40,6 +41,8 @@ public class TGS {
         byte[] encodedSecretV = comunicator.getBytes(16, ipAuth, AUTH_PORT);
         SecretKey secretV = new SecretKeySpec(encodedSecretV, 0, encodedSecretV.length, "AES");
 
+        System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded()));
+        
         //  Se recibe la Clave del Client/Servidor
         byte[] encodedSecretCV = comunicator.getBytes(16, ipAuth, AUTH_PORT);
         SecretKey secretCV = new SecretKeySpec(encodedSecretCV, 0, encodedSecretCV.length, "AES");
@@ -101,9 +104,12 @@ public class TGS {
         // Se crea E_K_V_TICKET_V
         String[] ticket_V_Array = {K_C_V, ID_C, AD_C, ID_V, TS_4, LT_4};
         String ticket_V = Arrays.toString(ticket_V_Array);
+        
         byte[] E_K_V_Ticket_V_Bytes = cryptor.AESEncryption(secretV, ticket_V);
         //String E_K_V_Ticket_V = new String(E_K_V_Ticket_V_Bytes, StandardCharsets.UTF_8);
         String E_K_V_Ticket_V = bytesToHex(E_K_V_Ticket_V_Bytes);
+        System.out.println("E_K_V_TICKET_V: " + E_K_V_Ticket_V);
+        System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(E_K_V_Ticket_V_Bytes));
 
         // Se crea (4)
         String[] message_4_Array = {K_C_V, ID_V, TS_4, E_K_V_Ticket_V};

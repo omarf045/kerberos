@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -37,8 +38,12 @@ public class ServiceServer {
             
             //  Se recibe la Clave del Servidor
             byte[] encodedSecretV = comunicator.getBytes(16,ipAC, AUTH_PORT);       
-            SecretKey secretV = new SecretKeySpec(encodedSecretV, 0, encodedSecretV.length, "AES");  
-                       
+            SecretKey secretV = new SecretKeySpec(encodedSecretV, 0, encodedSecretV.length, "AES");
+            
+            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded()));
+            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded())); 
+            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded())); 
+            
             System.out.println("Claves recibidas y codificadas");
             
             //  Recibe Mensaje (5)
@@ -51,16 +56,26 @@ public class ServiceServer {
             
             String message_5 = new String(message_5_Bytes, StandardCharsets.UTF_8).replaceAll("[\\[\\]]", "");
             
+            System.out.println(message_5);
+            
             System.out.println("Mensaje (5): " +  message_5);
             
             String[] message_5_array = message_5.split(",");
 
-            ticket_V = message_5_array[0];
+            ticket_V = message_5_array[0].replaceAll(" ","");
+            
+            System.out.println("ticketv: " + ticket_V);
+            
             byte[] ticket_V_Bytes = hexToBytes(ticket_V);
+            
+            System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(ticket_V_Bytes));
             byte[] decypher_ticket_V_Bytes = encryptor.AESDecryption(secretV, ticket_V_Bytes);
          
-            Auth_C2V = message_5_array[1];
-            byte[] Auth_C2V_Bytes = Auth_C2V.getBytes();
+            Auth_C2V = message_5_array[1].replaceAll(" ","");
+            byte[] Auth_C2V_Bytes = hexToBytes(Auth_C2V);
+            
+            Auth_C2V_Bytes = Arrays.copyOfRange(Auth_C2V_Bytes, 0, 80);
+            
             byte[] decypher_Auth_C2V_Bytes = encryptor.AESDecryption(secretCV, Auth_C2V_Bytes);
             
             //  Ticket_V

@@ -67,7 +67,7 @@ public class AuthCert {
 
             //Clave del Servidor al V
             ServerSocket ssV_V = new ServerSocket(AUTH_PORT);
-            kd.sendSecretKey(secretCV, ssV_V);
+            kd.sendSecretKey(secretV, ssV_V);
             System.out.println("Clave enviada al Servidor");       
             
 

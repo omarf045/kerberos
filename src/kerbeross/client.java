@@ -122,7 +122,7 @@ public class client {
             System.out.println("Esperando al TGS...");
             comunicator.sendBytes(TGS_PORT, message_3_Bytes);
 
-            //Recibe (4)
+            //  Recibe (4)
             System.out.println("Se recibio el mensaje (4)");
             byte[] encryptedMessage4 = comunicator.getBytes(512, ipTGS, TGS_PORT);
             encryptedMessage4 = conv.trim(encryptedMessage4);
@@ -133,28 +133,40 @@ public class client {
 
             decipheredArray4 = decipheredArray4.replace("[", "").replace("]", "");
 
+            System.out.println(decipheredArray4);
+
             String[] decipheredData4 = decipheredArray4.split(",");
 
             String KCV = decipheredData4[0];
             byte[] KCVBytes = hexToBytes(KCV);
             SecretKey secretKCV = new SecretKeySpec(KCVBytes, 0, KCVBytes.length, "AES");
 
-            String idV = decipheredData4[1];
-            String ts4 = decipheredData4[2];
-            String ticketV = decipheredData4[3];
+            String idV = decipheredData4[1].replaceAll(" ","");
+            String ts4 = decipheredData4[2].replaceAll(" ","");
+            String ticketV = decipheredData4[3].replaceAll(" ","");
 
-            //AuthC2V
+            System.out.println("TicketV: " + ticketV);
+            byte[] E_K_V_Ticket_V_Bytes = hexToBytes(ticketV);
+            System.out.println("E_K_V_TICKET_V_Bytes: " + Arrays.toString(E_K_V_Ticket_V_Bytes));
+
+            //  AuthC2V
             String ts5 = Instant.now().toString();
 
             String[] Auth_C2V_Array = {clientID, Str_ipC, ts5};
             String Auth_C2V = Arrays.toString(Auth_C2V_Array);
 
             byte[] K_CV_Auth_C2V_Bytes = encryptor.AESEncryption(secretKCV, Auth_C2V);
-            String K_CV_Auth_C2V = new String(K_CV_Auth_C2V_Bytes, StandardCharsets.UTF_8);
+            String K_CV_Auth_C2V = bytesToHex(K_CV_Auth_C2V_Bytes);
+            
+            
+            System.out.println("K_CV_Auth_C2V: " + K_CV_Auth_C2V);
+            System.out.println("K_CV_Auth_C2V_Bytes: " + Arrays.toString(K_CV_Auth_C2V_Bytes));
+            System.out.println("K_CV_Auth_C2V_Bytes.length: " + K_CV_Auth_C2V_Bytes.length);
+            //String K_CV_Auth_C2V = new String(K_CV_Auth_C2V_Bytes, StandardCharsets.UTF_8);
 
             //  Mensaje (5)
             String[] message_5_Array = {ticketV, K_CV_Auth_C2V};
-            String message_5 = Arrays.toString(Auth_C2V_Array);
+            String message_5 = Arrays.toString(message_5_Array);
             byte[] message_5_Bytes = message_5.getBytes();
 
             System.out.println("Esperando al SS...");
