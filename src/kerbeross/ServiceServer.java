@@ -8,7 +8,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -40,9 +39,6 @@ public class ServiceServer {
             byte[] encodedSecretV = comunicator.getBytes(16,ipAC, AUTH_PORT);       
             SecretKey secretV = new SecretKeySpec(encodedSecretV, 0, encodedSecretV.length, "AES");
             
-            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded()));
-            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded())); 
-            System.out.println("SecretV: " + Base64.getEncoder().encodeToString(secretV.getEncoded())); 
             
             System.out.println("Claves recibidas y codificadas");
             
@@ -79,7 +75,7 @@ public class ServiceServer {
             byte[] decypher_Auth_C2V_Bytes = encryptor.AESDecryption(secretCV, Auth_C2V_Bytes);
             
             //  Ticket_V
-            ticket_V = new String(ticket_V_Bytes, StandardCharsets.UTF_8);
+            ticket_V = new String(decypher_ticket_V_Bytes, StandardCharsets.UTF_8);
             ticket_V_Array = ticket_V.split(",");
             
             //  Auth_C2V
